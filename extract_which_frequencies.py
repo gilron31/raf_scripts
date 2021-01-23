@@ -40,11 +40,15 @@ def get_all_data_from_run(run_path, what_func, before_after = 0):
 	res = []
 	counter = 1
 	for dir_in_run in dirs_in_run:
-		print("dealing with run: " + str(counter))
-		counter += 1
-		wps = os.listdir(os.path.join(run_path, dir_in_run,"WPS_before_and_after"))[before_after]
-		path_to_biglog = os.path.join(run_path, dir_in_run,"WPS_before_and_after", wps, BIGLOGMAT)
-		res.append(what_func(loadmat(path_to_biglog)))
+		try:
+			print("dealing with run: " + str(counter))
+			counter += 1
+			wps = os.listdir(os.path.join(run_path, dir_in_run,"WPS_before_and_after"))[before_after]
+			path_to_biglog = os.path.join(run_path, dir_in_run,"WPS_before_and_after", wps, BIGLOGMAT)
+			res.append(what_func(loadmat(path_to_biglog)))	
+		except Exception as e:
+			print(e)
+
 	return res
 
 def main():
