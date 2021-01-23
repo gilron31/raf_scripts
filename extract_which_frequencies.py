@@ -14,7 +14,7 @@ def _todict(matobj):
 	dict = {}
 	for strg in matobj._fieldnames:
 		elem = matobj.__dict__[strg]
-		if isinstance(elem, sio.matlab.mio5_params.mat_struct):
+		if isinstance(elem, spio.matlab.mio5_params.mat_struct):
 			dict[strg] = _todict(elem)
 		else:
 			dict[strg] = elem
