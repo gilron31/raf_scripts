@@ -38,7 +38,7 @@ def main():
 	path_wps_before = os.path.join(first_mes_path, "WPS_before_and_after", wps_before)
 	
 	print(loadmat(os.path.join(path_wps_before, "bigLog.mat")))
-	 
+	return os.path.join(path_wps_before, "bigLog.mat")
 
 
 
