@@ -10,7 +10,7 @@ path_to_real_recordings = "G:\\real_recordings"
 def main():
 	all_runs = os.listdir(path_to_real_recordings)
 	run1_highs = all_runs[0]
- 	all_measurements_on_run1_highs = os.listdir(os.path.join(path_to_real_recordings, run1_highs))
+	all_measurements_on_run1_highs = os.listdir(os.path.join(path_to_real_recordings, run1_highs))
 	first_mes_path = os.path.join(path_to_real_recordings, run1_highs, all_measurements_on_run1_highs[0])
 	print(first_mes_path)
 
