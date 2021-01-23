@@ -5,7 +5,7 @@ import os
 
 def _check_keys( dict):
 	for key in dict:
-		if isinstance(dict[key], sio.matlab.mio5_params.mat_struct):
+		if isinstance(dict[key], spio.matlab.mio5_params.mat_struct):
 			dict[key] = _todict(dict[key])
 	return dict
 
