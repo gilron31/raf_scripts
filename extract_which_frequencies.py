@@ -122,24 +122,9 @@ def get_all_data_from_run(run_path, what_func, before_after = 0):
 
 	return res
 
-def main():
-	all_runs = os.listdir(path_to_real_recordings)
-	run1_highs = all_runs[0]
-	all_measurements_on_run1_highs = os.listdir(os.path.join(path_to_real_recordings, run1_highs))
-	first_mes_path = os.path.join(path_to_real_recordings, run1_highs, all_measurements_on_run1_highs[0])
-	print(first_mes_path)
-	wps_before = os.listdir(os.path.join(first_mes_path, "WPS_before_and_after"))[0]
-	path_wps_before = os.path.join(first_mes_path, "WPS_before_and_after", wps_before)
-	
-	print(loadmat(os.path.join(path_wps_before, "bigLog.mat")))
-	return os.path.join(path_wps_before, "bigLog.mat")
-
-
-
 
 if __name__ == '__main__':
 	print('hello world gil and his thesis')
-	main()
 
 
 
