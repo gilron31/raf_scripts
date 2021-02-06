@@ -31,9 +31,20 @@ BIGLOG = 'bigLog'
 BIGLOGMAT = 'bigLog.mat'
 LOGXFID = 'logXFID'
 F129 = 'f_129_estim'
+path_to_tempdir = "G:\\random_sampling_biglogs"
 
-def get_f_129_estim_from_biglog(biglog_dict):
-	return biglog_dict[BIGLOG][LOGXFID][F129]
+
+# %xconfig IPCompleter.use_jedi = False.
+def get_f_129_estim_from_biglog(path_to_biglog_dict):
+	return loadmat(path_to_biglog_dict)[BIGLOG][LOGXFID][F129]
+
+def get_f_129_estim_and_copy_biglog(path_to_biglog_dict):
+    print(path_to_biglog_dict)
+    f = ( loadmat(path_to_biglog_dict)[BIGLOG][LOGXFID][F129])
+    print(f)
+    os.popen("copy " + path_to_biglog_dict + " " + path_to_tempdir + "\\biglog_" + str(f) + ".mat")
+
+
 
 def get_all_data_from_run(run_path, what_func, before_after = 0):
 	dirs_in_run = os.listdir(run_path)
@@ -45,7 +56,7 @@ def get_all_data_from_run(run_path, what_func, before_after = 0):
 			counter += 1
 			wps = os.listdir(os.path.join(run_path, dir_in_run,"WPS_before_and_after"))[before_after]
 			path_to_biglog = os.path.join(run_path, dir_in_run,"WPS_before_and_after", wps, BIGLOGMAT)
-			res.append(what_func(loadmat(path_to_biglog)))	
+			res.append(what_func(path_to_biglog))	
 		except Exception as e:
 			print(e)
 
@@ -69,16 +80,6 @@ def main():
 if __name__ == '__main__':
 	print('hello world gil and his thesis')
 	main()
-
-
-
-
-
-
-
-
-
-
 
 
 
