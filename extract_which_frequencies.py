@@ -84,16 +84,27 @@ def get_sensitivities_from_ress(resx, resy, driveamp, diode = 0):
 
 	E_solid_x = Y_res_x / np.sqrt(a) - 1
 	E_solid_y = Y_res_y / np.sqrt(a) - 1
+
+	alpha = (Y_res_x ** 2 + Y_res_y ** 2) / a
+	E_ver2p = -0.5 + np.sqrt(0.25 - 0.5 * (1 - alpha)) 
+	E_ver2m = -0.5 - np.sqrt(0.25 - 0.5 * (1 - alpha)) 
+	print("E_ver2p: " + str(E_ver2p))
+	print("E_ver2m: " + str(E_ver2m))
+
+	E_ver3p =  np.sqrt( - 0.5 * (1 - alpha)) 
+	print("E_ver3p: " + str(E_ver3p))
 	#print("E_acc_x: " + str(E_acc_x))
 #	print("E_acc_xm: " + str(E_acc_xm))
 #	print("E_acc_y: " + str(E_acc_y))
 	#print("E_acc_ym: " + str(E_acc_ym))
-	#print("E_solid_x: " + str(E_solid_x))
-	#print("E_solid_y: " + str(E_solid_y))
+	print("E_solid_x: " + str(E_solid_x))
+	print("E_solid_y: " + str(E_solid_y))
+	print("E_solid_xp1: " + str(E_solid_x + 1))
+	print("E_solid_yp1: " + str(E_solid_y + 1))
 
 	Xe_amp = max(E_solid_x, E_solid_y) * np.sqrt(a)
 	#print("Xe_amp " + str(Xe_amp))
-	return Y_alk_x, Y_alk_y, Xe_amp 
+	return Y_alk_x, Y_alk_y, E_ver3p 
 
 def get_sensitivities_from_biglog_obj(biglog, diode = 0):
 	resx, resy, driveamp = get_ress_from_biglog_obj(biglog)
