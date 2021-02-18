@@ -32,9 +32,14 @@ BIGLOGMAT = 'bigLog.mat'
 LOGXFID = 'logXFID'
 F129 = 'f_129_estim'
 path_to_tempdir = "G:\\random_sampling_biglogs"
+LOGSXMAGS = "logSXMAGS"
 
 
 # %xconfig IPCompleter.use_jedi = False.
+def get_f_129_and_G2_from_biglog_path(path_to_biglog):
+	logsxmags = loadmat(path_to_biglog)[BIGLOG][LOGSXMAGS]
+	return logsxmags['f_0'], logsxmags['G2estim']
+
 def get_f_129_estim_from_biglog(path_to_biglog_dict):
 	return loadmat(path_to_biglog_dict)[BIGLOG][LOGXFID][F129]
 
@@ -74,26 +79,19 @@ def get_sensitivities_from_ress(resx, resy, driveamp, diode = 0):
 	#print("E_naive_x :" + str(E_naive_x))
 	#print("E_naive_y :" + str(E_naive_y))
 
-	#E_acc_both = ((Y_res_x ** 2 - Y_res_y ** 2)/(Y_alk_x ** 2 - Y_alk_y ** 2) - 1) * 0.5
-
 	a = Y_alk_x ** 2 + Y_alk_y ** 2 
-	#det_x = Y_alk_x ** 4 - a * (Y_alk_x ** 2 - Y_res_x ** 2) 
-	#E_acc_x = (- Y_alk_x ** 2 + np.sqrt(det_x)) / a
-	#E_acc_y = (- Y_alk_y ** 2 + np.sqrt(det_y)) / a
-	#E_acc_ym = (- Y_alk_y ** 2 - np.sqrt(det_y)) / a
+	alpha = (Y_res_x ** 2 + Y_res_y ** 2) / a
 
-	E_solid_x = Y_res_x / np.sqrt(a) - 1
-	E_solid_y = Y_res_y / np.sqrt(a) - 1
-	#print("E_acc_x: " + str(E_acc_x))
-#	print("E_acc_xm: " + str(E_acc_xm))
-#	print("E_acc_y: " + str(E_acc_y))
-	#print("E_acc_ym: " + str(E_acc_ym))
-	#print("E_solid_x: " + str(E_solid_x))
-	#print("E_solid_y: " + str(E_solid_y))
+	#E_lb_x = Y_res_x / np.sqrt(a) - 1
+	#E_lb_y = Y_res_y / np.sqrt(a) - 1
 
-	Xe_amp = max(E_solid_x, E_solid_y) * np.sqrt(a)
+
+	E_ver3p =  np.sqrt( - 0.5 * (1 - alpha)) 
+	#print("E_ver3p: " + str(E_ver3p))
+
+	Xe_amp = E_ver3p * np.sqrt(a)
 	#print("Xe_amp " + str(Xe_amp))
-	return Y_alk_x, Y_alk_y, Xe_amp 
+	return Y_alk_x, Y_alk_y, E_ver3p 
 
 def get_sensitivities_from_biglog_obj(biglog, diode = 0):
 	resx, resy, driveamp = get_ress_from_biglog_obj(biglog)
@@ -105,6 +103,9 @@ def get_ress_from_biglog_obj(biglog):
 	resy = logSXMAGS["res_fory"]
 	driveamp = logSXMAGS["driveamp_G"]	
 	return resx, resy, driveamp
+
+def get_sensitivities_from_biglog_path(biglog_path, diode = 0):
+	return get_sensitivities_from_biglog_obj(loadmat(biglog_path), diode)
 
 def get_all_data_from_run(run_path, what_func, before_after = 0):
 	dirs_in_run = os.listdir(run_path)
@@ -122,24 +123,9 @@ def get_all_data_from_run(run_path, what_func, before_after = 0):
 
 	return res
 
-def main():
-	all_runs = os.listdir(path_to_real_recordings)
-	run1_highs = all_runs[0]
-	all_measurements_on_run1_highs = os.listdir(os.path.join(path_to_real_recordings, run1_highs))
-	first_mes_path = os.path.join(path_to_real_recordings, run1_highs, all_measurements_on_run1_highs[0])
-	print(first_mes_path)
-	wps_before = os.listdir(os.path.join(first_mes_path, "WPS_before_and_after"))[0]
-	path_wps_before = os.path.join(first_mes_path, "WPS_before_and_after", wps_before)
-	
-	print(loadmat(os.path.join(path_wps_before, "bigLog.mat")))
-	return os.path.join(path_wps_before, "bigLog.mat")
-
-
-
 
 if __name__ == '__main__':
 	print('hello world gil and his thesis')
-	main()
 
 
 
