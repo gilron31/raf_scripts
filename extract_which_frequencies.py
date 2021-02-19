@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io as spio
 import os
+from collections.abc import Iterable
 
 
 def _check_keys( dict):
@@ -65,7 +66,7 @@ def get_sensitivities_from_ress(resx, resy, driveamp, diode = 0):
 		x_ind = 5
 		y_ind = 4
 
-	if isinstance(resx[0], list):
+	if isinstance(resx[0], Iterable):
 		if len(resx) == 5:
 			offres_x_responses = [resx[i, x_ind] for i in [0,1,3,4]]
 			offres_y_responses = [resy[i, y_ind] for i in [0,1,3,4]]
