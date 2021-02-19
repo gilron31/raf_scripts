@@ -34,6 +34,13 @@ F129 = 'f_129_estim'
 path_to_tempdir = "G:\\random_sampling_biglogs"
 LOGSXMAGS = "logSXMAGS"
 
+def get_biglogs_from_run(p1):
+	list_of_biglogs = []
+	for p in p1:
+		ptemp1 = os.listdir(os.join(p1, p, 'WPS_before_and_after'))[0]
+		ptemp2 = os.join(p1, p, 'WPS_before_and_after', ptemp1, 'bigLog.mat')
+		list_of_biglogs.append(ptemp2)
+	return list_of_biglogs
 
 # %xconfig IPCompleter.use_jedi = False.
 def get_f_129_and_G2_from_biglog_path(path_to_biglog):
