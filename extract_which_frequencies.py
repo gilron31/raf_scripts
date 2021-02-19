@@ -58,7 +58,7 @@ def get_sensitivities_from_ress(resx, resy, driveamp, diode = 0):
 		x_ind = 5
 		y_ind = 4
 
-	if len(resx[0]) != 0:
+	if isinstance(resx[0], list):
 		if len(resx) == 5:
 			offres_x_responses = [resx[i, x_ind] for i in [0,1,3,4]]
 			offres_y_responses = [resy[i, y_ind] for i in [0,1,3,4]]
