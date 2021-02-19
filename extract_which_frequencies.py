@@ -44,9 +44,13 @@ def get_biglogs_from_run(p1):
 	return list_of_biglogs
 
 # %xconfig IPCompleter.use_jedi = False.
-def get_f_129_and_G2_from_biglog_path(path_to_biglog):
-	logsxmags = loadmat(path_to_biglog)[BIGLOG][LOGSXMAGS]
+
+def get_f_129_and_G2_from_biglog_obj(biglog_obj):
+	logsxmags = biglog_obj[BIGLOG][LOGSXMAGS]
 	return logsxmags['f_0'], logsxmags['G2estim']
+	
+def get_f_129_and_G2_from_biglog_path(path_to_biglog):
+	return loadmat(path_to_biglog)
 
 def get_f_129_estim_from_biglog(path_to_biglog_dict):
 	return loadmat(path_to_biglog_dict)[BIGLOG][LOGXFID][F129]
@@ -57,6 +61,15 @@ def get_f_129_estim_and_copy_biglog(path_to_biglog_dict):
     print(f)
     os.popen("copy " + path_to_biglog_dict + " " + path_to_tempdir + "\\biglog_" + str(f) + ".mat")
 
+
+
+def get_mean_noise_from_biglog_obj(biglog_obj, f_cent, mag_sens):
+	NS = biglog_obj['bigLog']['logNS']
+	return get_mean_noise(NS['Sf'], NS['f'], 0.9*f_cent, 1.1*f_cent, NS['Rb_V_2_G'], mag_sens)
+	
+
+def get_mean_noise(Sf, f, fmin, fmax, sens_original, sens_new):
+	return np.mean([np.sqrt(Sf[i]) for i in range(len(f)) if fmin < f[i] < fmax])*sens_original/sens_new
 
 def get_sensitivities_from_ress(resx, resy, driveamp, diode = 0):
 	if diode == 0:
@@ -121,6 +134,18 @@ def get_ress_from_biglog_obj(biglog):
 
 def get_sensitivities_from_biglog_path(biglog_path, diode = 0):
 	return get_sensitivities_from_biglog_obj(loadmat(biglog_path), diode)
+
+def get_all_relevant_data_from_biglog_path(biglog_path):
+	biglog_obj = loadmat(biglog_path)
+	f_cent, G2 = get_f_129_and_G2_from_biglog_obj(biglog_obj)
+	T_alk_main_x, T_alk_main_y, E_main = get_sensitivities_from_biglog_obj(biglog_obj,0)
+	T_alk_sec_x, T_alk_sec_y, E_sec = get_sensitivities_from_biglog_obj(biglog_obj,1)
+	effective_mag_sens_main = np.sqrt(T_alk_main_x ** 2 + T_alk_main_y ** 2)
+	effective_mag_sens_sec = np.sqrt(T_alk_sec_x ** 2 + T_alk_sec_y ** 2)
+	mean_noise = get_mean_noise_from_biglog_obj(biglog_obj, f_cent, effective_mag_sens_sec)
+	mean_noise_uncalibrated = mean_noise * effective_mag_sens_sec
+	return [f_cent, G2, T_alk_main_x, T_alk_main_y,E_main, T_alk_sec_x, T_alk_sec_y, E_sec, mean_noise, mean_noise_uncalibrated]
+	
 
 def get_all_data_from_run(run_path, what_func, before_after = 0):
 	dirs_in_run = os.listdir(run_path)
