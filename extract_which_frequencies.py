@@ -58,16 +58,23 @@ def get_sensitivities_from_ress(resx, resy, driveamp, diode = 0):
 		x_ind = 5
 		y_ind = 4
 
-	if len(resx) == 5:
-		offres_x_responses = [resx[i, x_ind] for i in [0,1,3,4]]
-		offres_y_responses = [resy[i, y_ind] for i in [0,1,3,4]]
-		Y_res_x = np.abs(resx[2,x_ind])/driveamp
-		Y_res_y = np.abs(resy[2,y_ind])/driveamp
-	if len(resx) == 3:
-		offres_x_responses = [resx[i, x_ind] for i in [0,2]]
-		offres_y_responses = [resy[i, y_ind] for i in [0,2]]
-		Y_res_x = np.abs(resx[1,x_ind])/driveamp
-		Y_res_y = np.abs(resy[1,y_ind])/driveamp
+	if len(resx[0]) != 0:
+		if len(resx) == 5:
+			offres_x_responses = [resx[i, x_ind] for i in [0,1,3,4]]
+			offres_y_responses = [resy[i, y_ind] for i in [0,1,3,4]]
+			Y_res_x = np.abs(resx[2,x_ind])/driveamp
+			Y_res_y = np.abs(resy[2,y_ind])/driveamp
+		if len(resx) == 3:
+			offres_x_responses = [resx[i, x_ind] for i in [0,2]]
+			offres_y_responses = [resy[i, y_ind] for i in [0,2]]
+			Y_res_x = np.abs(resx[1,x_ind])/driveamp
+			Y_res_y = np.abs(resy[1,y_ind])/driveamp
+	else:
+		offres_x_responses = [resx[i] for i in [0,1,3,4]]
+		offres_y_responses = [resy[i] for i in [0,1,3,4]]
+		Y_res_x = np.abs(resx[2])/driveamp
+		Y_res_y = np.abs(resy[2])/driveamp
+		
 		
 
 	Y_alk_x = np.mean(np.abs(offres_x_responses))/driveamp
